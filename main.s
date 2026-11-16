@@ -235,3 +235,16 @@ laco_soma:
 fim_soma:
     MOV     R0, R2
     BX      LR
+
+    /* ----------------------------------------------------------------------
+ * converter_7segmentos
+ * Entrada: R0 = digito hexadecimal 0..15.
+ * Saida: R0 = padrao dos segmentos gfedcba (bit 0 = segmento a).
+ * Altera: R0, R1; nao altera registradores preservados.
+ * Pilha: nao utiliza (sub-rotina folha; somente caller-saved).
+ * A conversao depende da tabela de bytes na secao .data.
+ * ---------------------------------------------------------------------- */
+converter_7segmentos:
+    LDR     R1, =tabela_7segmentos
+    LDRB    R0, [R1, R0]
+    BX      LR
