@@ -124,3 +124,41 @@ mostrar_ordenado:
     BL      mostrar_valor
     B       laco_principal
 
+    /* ----------------------------------------------------------------------
+ * ordenar_bubble
+ * Entrada: R0 = endereco do vetor (palavras de 32 bits), R1 = tamanho.
+ * Saida: vetor ordenado em ordem crescente (in-place).
+ * Altera: R2, R3, R12 e flags; R4-R8 alterados temporariamente.
+ * Pilha: PUSH/POP de R4-R8 e LR (24 bytes, alinhados em 8).
+ * Observacao: comparacao com sinal (BGT/STRGT); tamanho sem sinal.
+ * ---------------------------------------------------------------------- */
+ordenar_bubble:
+    PUSH    {R4-R8, LR}
+    MOV     R4, R0              @ base do vetor
+    CMP     R1, #1
+    BLS     fim_ordenacao       @ nao ha trabalho se tamanho <= 1
+    SUB     R5, R1, #1          @ n-1
+    MOV     R6, #0              @ indice externo i
+
+inicio_passada:
+    MOV     R7, #0              @ indice interno j
+    SUB     R8, R5, R6          @ limite de comparacoes desta passada
+
+comparar_par:
+    LDR     R2, [R4, R7, LSL #2]
+    ADD     R3, R7, #1
+    LDR     R12, [R4, R3, LSL #2]
+    CMP     R2, R12
+    STRGT   R12, [R4, R7, LSL #2]
+    STRGT   R2, [R4, R3, LSL #2]
+    ADD     R7, R7, #1
+    CMP     R7, R8
+    BLO     comparar_par
+
+    ADD     R6, R6, #1
+    CMP     R6, R5
+    BLO     inicio_passada
+
+fim_ordenacao:
+    POP     {R4-R8, PC}
+
