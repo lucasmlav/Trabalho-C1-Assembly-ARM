@@ -11,7 +11,7 @@
  * Saidas: HEX3..HEX0 = valor hexadecimal de 16 bits;
  *         LEDR9..LEDR0 = 10 bits menos significativos do valor.
  *
- * Nota: os valores do vetor de exemplo sao nao negativos e cabem
+ * Nota: Os valores do vetor de que está de exemplo sao nao negativos e cabem
  * em 16 bits. A soma tambem cabe em 16 bits.
  */
 
@@ -29,7 +29,7 @@
     .global _start
 
     _start:
-    /* Pilha reservada neste programa; alinhamento de 8 bytes. */
+    /* A Pilha reservada neste programa; alinhamento de 8 bytes. */
     LDR     SP, =pilha_topo
 
     /* Ordena o vetor in-place antes de operar os quatro modos. */
@@ -53,7 +53,7 @@
     BL      calcular_soma
     MOV     R11, R0
 
-    /* Registradores usados continuamente no loop principal. */
+    /* Registradores sao usados continuamente no loop principal. */
     MVN     R4, #0              @ modo anterior: -1 (invalido)
     LDR     R5, =SW
     LDR     R6, =KEY
@@ -130,7 +130,7 @@ mostrar_ordenado:
  * Saida: vetor ordenado em ordem crescente (in-place).
  * Altera: R2, R3, R12 e flags; R4-R8 alterados temporariamente.
  * Pilha: PUSH/POP de R4-R8 e LR (24 bytes, alinhados em 8).
- * Observacao: comparacao com sinal (BGT/STRGT); tamanho sem sinal.
+ * Observacao: comparacao com sinal (BGT/STRGT); o tamanho sem sinal.
  * ---------------------------------------------------------------------- */
 ordenar_bubble:
     PUSH    {R4-R8, LR}
