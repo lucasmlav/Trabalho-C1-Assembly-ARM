@@ -248,3 +248,61 @@ converter_7segmentos:
     LDR     R1, =tabela_7segmentos
     LDRB    R0, [R1, R0]
     BX      LR
+
+    /* ----------------------------------------------------------------------
+ * mostrar_valor
+ * Entrada: R0 = valor de 32 bits a exibir.
+ * Saida: escrita nos perifericos LEDR e HEX3..HEX0.
+ *         HEX recebe os 16 bits menos significativos (4 digitos).
+ *         LEDR recebe os 10 bits menos significativos.
+ * Altera: R0-R3 e flags; R4-R8 e LR alterados temporariamente.
+ * Pilha: PUSH/POP de R4-R8 e LR; preservacao de 8 bytes para BL.
+ * Chama converter_7segmentos quatro vezes, uma para cada nibble.
+ * ---------------------------------------------------------------------- */
+mostrar_valor:
+    PUSH    {R4-R8, LR}
+    MOV     R8, R0              @ valor original, para os LEDs
+    MOV     R4, R0              @ copia deslocada para obter os nibbles
+    MOV     R5, #0              @ palavra codificada para os displays
+    MOV     R6, #0              @ deslocamento em bits (0,8,16,24)
+    MOV     R7, #4              @ quatro digitos
+
+proximo_digito:
+    AND     R0, R4, #15
+    BL      converter_7segmentos
+    ORR     R5, R5, R0, LSL R6
+    LSR     R4, R4, #4
+    ADD     R6, R6, #8
+    SUBS    R7, R7, #1
+    BNE     proximo_digito
+
+    LDR     R0, =HEX3_HEX0
+    STR     R5, [R0]
+    LDR     R0, =LEDR
+    STR     R8, [R0]            @ so LEDR9..LEDR0 sao usados pelo hardware
+    POP     {R4-R8, PC}
+
+    .ltorg
+
+    .section .data
+    .align 2
+vetor:
+    .word   18, 7, 42, 5, 31, 9, 20, 3, 40, 11
+    /* Ordenado: 3, 5, 7, 9, 11, 18, 20, 31, 40, 42 */
+    /* Maior = 42 (0x002A); menor = 3 (0x0003); soma = 186 (0x00BA). */
+
+estado_key0:
+    .word   0
+
+/* Padroes 7 segmentos para 0,1,2,3,4,5,6,7,8,9,A,b,C,d,E,F. */
+tabela_7segmentos:
+    .byte   0x3F, 0x06, 0x5B, 0x4F
+    .byte   0x66, 0x6D, 0x7D, 0x07
+    .byte   0x7F, 0x6F, 0x77, 0x7C
+    .byte   0x39, 0x5E, 0x79, 0x71
+
+    .section .bss
+    .balign 8
+pilha_base:
+    .space 1024
+pilha_topo:
