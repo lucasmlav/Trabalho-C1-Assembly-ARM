@@ -28,3 +28,99 @@
     .align 2
     .global _start
 
+    _start:
+    /* Pilha reservada neste programa; alinhamento de 8 bytes. */
+    LDR     SP, =pilha_topo
+
+    /* Ordena o vetor in-place antes de operar os quatro modos. */
+    LDR     R0, =vetor
+    MOV     R1, #TAM_VETOR
+    BL      ordenar_bubble
+
+    /* Calcula e guarda as tres estatisticas nos registradores. */
+    LDR     R0, =vetor
+    MOV     R1, #TAM_VETOR
+    BL      calcular_maior
+    MOV     R9, R0
+
+    LDR     R0, =vetor
+    MOV     R1, #TAM_VETOR
+    BL      calcular_menor
+    MOV     R10, R0
+
+    LDR     R0, =vetor
+    MOV     R1, #TAM_VETOR
+    BL      calcular_soma
+    MOV     R11, R0
+
+    /* Registradores usados continuamente no loop principal. */
+    MVN     R4, #0              @ modo anterior: -1 (invalido)
+    LDR     R5, =SW
+    LDR     R6, =KEY
+    LDR     R7, =vetor
+    MOV     R8, #0              @ indice do vetor ordenado
+
+laco_principal:
+    /* Ler apenas SW1 e SW0: quatro modos de exibicao. */
+    LDR     R0, [R5]
+    AND     R0, R0, #3
+
+    /* Na entrada no modo 11, volta ao primeiro elemento. */
+    CMP     R0, R4
+    BEQ     verificar_key0
+    MOV     R4, R0
+    CMP     R0, #3
+    MOVEQ   R8, #0
+
+verificar_key0:
+    /*
+     * A tecla KEY0 vale 1 quando pressionada.
+     * Um toque = transicao 0 -> 1; nao repete com tecla segurada.
+     * Amostramos mesmo nos outros modos para manter o estado coerente.
+     */
+    LDR     R2, [R6]
+    AND     R2, R2, #1
+    LDR     R1, =estado_key0
+    LDR     R3, [R1]            @ estado anterior
+    STR     R2, [R1]            @ registra estado atual
+
+    CMP     R0, #3
+    BNE     escolher_modo
+    CMP     R2, #1
+    BNE     escolher_modo
+    CMP     R3, #0
+    BNE     escolher_modo
+
+    ADD     R8, R8, #1          @ proximo elemento
+    CMP     R8, #TAM_VETOR
+    MOVEQ   R8, #0              @ apos o ultimo, reinicia
+
+escolher_modo:
+    CMP     R0, #0
+    BEQ     mostrar_maior
+    CMP     R0, #1
+    BEQ     mostrar_menor
+    CMP     R0, #2
+    BEQ     mostrar_soma
+    B       mostrar_ordenado
+
+mostrar_maior:
+    MOV     R0, R9
+    BL      mostrar_valor
+    B       laco_principal
+
+mostrar_menor:
+    MOV     R0, R10
+    BL      mostrar_valor
+    B       laco_principal
+
+mostrar_soma:
+    MOV     R0, R11
+    BL      mostrar_valor
+    B       laco_principal
+
+mostrar_ordenado:
+    LDR     R0, [R7, R8, LSL #2]
+    BL      mostrar_valor
+    B       laco_principal
+
