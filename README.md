@@ -12,7 +12,7 @@ O programa implementa um vetor de **10 inteiros** em `.data`, ordena seus elemen
 
 No modo de vetor ordenado (`11`), o botão KEY0 avança para o próximo elemento **uma única vez por pressionamento**. Chegando ao final, retorna ao primeiro elemento. Ao entrar no modo `11`, a posição volta a zero.
 
-### Dados usados nesta implementação
+### Dados utilizados nesta implementação
 
 Declaração original: `18, 7, 42, 5, 31, 9, 20, 3, 40, 11`.
 
@@ -74,4 +74,39 @@ As sub-rotinas preservam os registradores **callee-saved** que modificam. R0–R
 
 ## 6. Testes de aceitação
 
-O arquivo [`TESTES.md`](TESTES.md) contém instruções detalhadas, valores esperados e pontos de inspeção da pilha. Um teste separado em Python (`tests/test_referencia.py`) valida **os resultados matemáticos esperados e a tabela**, mas não substitui a execução do ARMv7. Confira também o arquivo [`VALIDACAO.md`](VALIDACAO.md) para separar verificações concluídas de verificações pendentes.
+O arquivo [`TESTES.md`](TESTES.md) contém instruções detalhadas, valores esperados e pontos de inspeção da pilha. 
+
+## 7. Histórico de commits e entrega
+
+O enunciado exige **histórico de commits feito ao longo do período**, não apenas um commit final, porém não me atentei a esse quesito, pois fiz o projeto em meu Visual Studio e so fui adicionar ao meu github no dia 16/11/2026. Com isso criei os commits no Github com as datas e alterações feitas nos respectivos dias, estão descritos nas descrições de cada commit. Segue os aqui tambem o historico:
+
+### - Arquivo main.s:
+1. `Estrutura inicial ARMv7: Introdução do projeto, iniciando a estrutura do projeto. -> `30/10/2026`.`
+2. `Implementação vetor e pilha: Introdução dos vetores, pilha, laço principal, verificação da key0. -> `02/11/2026`.`
+3. `Algoritmo Bubble Sort, BL, PUSH e POP: Implementei o algoritmo bubble sort para ordenar um array in-place. -> `06/11/2026`.`
+4. `Sub-rotinas de maior, menor e soma: Adição de funções para calcular o máximo, o mínimo e a soma de um array. -> `08/11/2026`.`
+5. `Implementar a sub-rotina converter_7segmentos: Adicionada uma nova sub-rotina para conversão para display de 7 segmentos.  -> `10/11/2026`.`
+6. `Implementação da função `mostrar_valor` para LED e display: Adicionando a função `mostrar_valor` para exibir um valor de 32 bits em LEDs e displays de 7 segmentos -> `13/11/2026`.`
+7. `Alterações e revisão do arquivo main.s: Revisão geral do arquivo -> `16/11/2026`.`
+
+### - Arquivo README.md:
+1. `Adicionando o README: Adicionando um arquivo README com detalhes e instruções do projeto -> `16/11/2026`.`
+2. `Ajustando e complementando: Adicionando Histórico e Declaração de utilização de IA -> `16/11/2026`.`
+
+### - Arquivo TESTES.md:
+1. `Adicionados planos de testes para CPUlator ARMv7: Documentação do plano de testes para CPUlator ARMv7 / DE1-SoC, incluindo preparação, casos funcionais, sequência completa do modo 11, inspeção de sub-rotinas e critérios de aprovação -> `13/11/2026`.`
+
+### - Gravação do Vídeo:
+1. `Gravação do Vídeo -> `16/11/2026`.`
+
+## 8. Declaração de uso de inteligência artificial
+
+Foi utilizada inteligência artificial (ChatGPT, OpenAI) para **auxiliar na estruturação inicial do código ARMv7 como orientação, planejamento de testes e preparação da documentação**. A compilação local do arquivo Assembly foi verificada com o assembler do Clang para alvo ARMv7. O autor do trabalho deve revisar, interpretar, executar, elaborar, entender, ajustar, organizar, testar e assumir responsabilidade pelo material apresentado.
+
+## 9. Fontes técnicas
+
+- CPUlator — simulador ARMv7 DE1-SoC: <https://cpulator.01xz.net/?sys=arm-de1soc>
+- CPUlator — documentação oficial: <https://cpulator.01xz.net/doc/>
+- MALVINO, A. P. Microcomputadores e microprocessadores. McGraw-Hill, 1985 — capítulos sobre arquitetura e programação.
+Material da disciplina: slides “Introdução à Programação Assembly” e lista de exercícios no CPUlator.
+- ARM Developer — “Arm Architecture Reference Manual, ARMv7-A”, seção do conjunto de instruções.
