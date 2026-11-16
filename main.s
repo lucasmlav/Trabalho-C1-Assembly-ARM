@@ -306,3 +306,4 @@ tabela_7segmentos:
 pilha_base:
     .space 1024
 pilha_topo:
+
