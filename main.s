@@ -162,3 +162,76 @@ comparar_par:
 fim_ordenacao:
     POP     {R4-R8, PC}
 
+/* ----------------------------------------------------------------------
+ * calcular_maior
+ * Entrada: R0 = endereco do vetor, R1 = quantidade de elementos.
+ * Saida: R0 = maior inteiro com sinal (ou 0 se tamanho == 0).
+ * Altera: R0-R3 e flags; nao altera registradores preservados.
+ * Pilha: nao utiliza (sub-rotina folha; somente caller-saved).
+ * ---------------------------------------------------------------------- */
+calcular_maior:
+    CMP     R1, #0
+    MOVEQ   R0, #0
+    BXEQ    LR
+    LDR     R2, [R0], #4
+    SUBS    R1, R1, #1
+    BEQ     fim_maior
+
+laco_maior:
+    LDR     R3, [R0], #4
+    CMP     R3, R2
+    MOVGT   R2, R3
+    SUBS    R1, R1, #1
+    BNE     laco_maior
+
+fim_maior:
+    MOV     R0, R2
+    BX      LR
+
+/* ----------------------------------------------------------------------
+ * calcular_menor
+ * Entrada: R0 = endereco do vetor, R1 = quantidade de elementos.
+ * Saida: R0 = menor inteiro com sinal (ou 0 se tamanho == 0).
+ * Altera: R0-R3 e flags; nao altera registradores preservados.
+ * Pilha: nao utiliza (sub-rotina folha; somente caller-saved).
+ * ---------------------------------------------------------------------- */
+calcular_menor:
+    CMP     R1, #0
+    MOVEQ   R0, #0
+    BXEQ    LR
+    LDR     R2, [R0], #4
+    SUBS    R1, R1, #1
+    BEQ     fim_menor
+
+laco_menor:
+    LDR     R3, [R0], #4
+    CMP     R3, R2
+    MOVLT   R2, R3
+    SUBS    R1, R1, #1
+    BNE     laco_menor
+
+fim_menor:
+    MOV     R0, R2
+    BX      LR
+
+/* ----------------------------------------------------------------------
+ * calcular_soma
+ * Entrada: R0 = endereco do vetor, R1 = quantidade de elementos.
+ * Saida: R0 = soma dos valores modulo 2^32.
+ * Altera: R0-R3 e flags; nao altera registradores preservados.
+ * Pilha: nao utiliza (sub-rotina folha; somente caller-saved).
+ * ---------------------------------------------------------------------- */
+calcular_soma:
+    MOV     R2, #0
+    CMP     R1, #0
+    BEQ     fim_soma
+
+laco_soma:
+    LDR     R3, [R0], #4
+    ADD     R2, R2, R3
+    SUBS    R1, R1, #1
+    BNE     laco_soma
+
+fim_soma:
+    MOV     R0, R2
+    BX      LR
